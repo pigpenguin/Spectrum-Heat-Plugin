@@ -10,8 +10,8 @@ namespace Spectrum.Plugins.Heat
 {
 
     public enum Units {kph, mph};
-    public enum Display {watermark, hud, car}
-    public enum Activation {always, warning, toggle}
+    public enum Display {watermark, hud, car};
+    public enum Activation {always, warning, toggle};
     public class Entry : IPlugin, IUpdatable
     {
         public string FriendlyName => "Heat";
@@ -36,31 +36,17 @@ namespace Spectrum.Plugins.Heat
             warningThreshold = _settings.GetItem<double>("warningThreshold");
             manager.Hotkeys.Bind(_settings.GetItem<string>("toggleHotkey"), () => { toggled = !toggled; Game.WatermarkText = ""; });
         }
-        private Activation ParseActivation(string s)
-        {
-            if (s.Equals("always"))
-                return Activation.always;
 
-            if (s.Equals("toggle"))
-                return Activation.toggle;
-
-            return Activation.warning;
-        }
-        private Display ParseDisplay(string s)
+        public void Update()
         {
-            if (s.Equals("hud"))
-                return Display.hud;
-            else if (s.Equals("watermark"))
-                return Display.watermark;
-            else
-                return Display.car;
-        }
-        private Units ParseUnits(string s)
-        {
-            if (s.Equals("kph") || s.Equals("KPH"))
-                return Units.kph;
+            if (DisplayEnabled())
+            {
+                if (display == Display.hud)
+                    LocalVehicle.HUD.SetHUDText(DisplayText());
+                else
+                    Game.WatermarkText = DisplayText();
+            }
 
-            return Units.mph;
         }
         private string HeatPercent()
         {
@@ -89,16 +75,32 @@ namespace Spectrum.Plugins.Heat
                 return false;
             }
         }
-        public void Update()
+        
+        private Activation ParseActivation(string s)
         {
-           if (DisplayEnabled())
-           {
-                if (display == Display.hud)
-                    LocalVehicle.HUD.SetHUDText(DisplayText());
-                else
-                    Game.WatermarkText = DisplayText();
-           }
- 
+            if (s.Equals("always"))
+                return Activation.always;
+
+            if (s.Equals("toggle"))
+                return Activation.toggle;
+
+            return Activation.warning;
+        }
+        private Display ParseDisplay(string s)
+        {
+            if (s.Equals("hud"))
+                return Display.hud;
+            else if (s.Equals("watermark"))
+                return Display.watermark;
+            else
+                return Display.car;
+        }
+        private Units ParseUnits(string s)
+        {
+            if (s.Equals("kph") || s.Equals("KPH"))
+                return Units.kph;
+
+            return Units.mph;
         }
         private void ValidateSettings()
         {
@@ -119,6 +121,7 @@ namespace Spectrum.Plugins.Heat
 
             _settings.Save();
         }
+
         public void Shutdown()
         {
 
