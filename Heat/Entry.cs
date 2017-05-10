@@ -20,7 +20,6 @@ namespace Spectrum.Plugins.Heat
         public APILevel CompatibleAPILevel => APILevel.UltraViolet;
 
         private bool toggled = false;
-        private bool inGame = false;
         private double warningThreshold;
         private Units units;
         private Display display;
