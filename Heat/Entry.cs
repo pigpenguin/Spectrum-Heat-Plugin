@@ -30,9 +30,9 @@ namespace Spectrum.Plugins.Heat
         {
             _settings = new Settings(typeof(Entry));
             ValidateSettings();
-            units = ParseUnits(_settings.GetItem<string>("units"));
-            display = ParseDisplay(_settings.GetItem<string>("display"));
-            activation = ParseActivation(_settings.GetItem<string>("activation"));
+            units = (Units)Enum.Parse(typeof(Units),_settings.GetItem<string>("units"));
+            display = (Display)Enum.Parse(typeof(Display),_settings.GetItem<string>("display"));
+            activation = (Activation)Enum.Parse(typeof(Activation),_settings.GetItem<string>("activation"));
             warningThreshold = _settings.GetItem<double>("warningThreshold");
             manager.Hotkeys.Bind(_settings.GetItem<string>("toggleHotkey"), () => { toggled = !toggled; Game.WatermarkText = ""; });
         }
@@ -76,32 +76,6 @@ namespace Spectrum.Plugins.Heat
             }
         }
         
-        private Activation ParseActivation(string s)
-        {
-            if (s.Equals("always"))
-                return Activation.always;
-
-            if (s.Equals("toggle"))
-                return Activation.toggle;
-
-            return Activation.warning;
-        }
-        private Display ParseDisplay(string s)
-        {
-            if (s.Equals("hud"))
-                return Display.hud;
-            else if (s.Equals("watermark"))
-                return Display.watermark;
-            else
-                return Display.car;
-        }
-        private Units ParseUnits(string s)
-        {
-            if (s.Equals("kph") || s.Equals("KPH"))
-                return Units.kph;
-
-            return Units.mph;
-        }
         private void ValidateSettings()
         {
             if (!_settings.ContainsKey("toggleHotkey"))
