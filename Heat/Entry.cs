@@ -35,7 +35,7 @@ namespace Spectrum.Plugins.Heat
             display = ParseDisplay(_settings.GetItem<string>("display"));
             activation = ParseActivation(_settings.GetItem<string>("activation"));
             warningThreshold = _settings.GetItem<double>("warningThreshold");
-            manager.Hotkeys.Bind(_settings.GetItem<string>("ToggleHeatHotkey"), () => { toggled = !toggled; Game.WatermarkText = ""; });
+            manager.Hotkeys.Bind(_settings.GetItem<string>("toggleHotkey"), () => { toggled = !toggled; Game.WatermarkText = ""; });
         }
         private Activation ParseActivation(string s)
         {
@@ -103,8 +103,8 @@ namespace Spectrum.Plugins.Heat
         }
         private void ValidateSettings()
         {
-            if (!_settings.ContainsKey("ToggleHeatHotkey"))
-                _settings.Add("ToggleHeatHotkey", "LeftControl+H");
+            if (!_settings.ContainsKey("toggleHotkey"))
+                _settings.Add("toggleHotkey", "LeftControl+H");
             
             if (!_settings.ContainsKey("units"))
                 _settings.Add("units", "kph");
