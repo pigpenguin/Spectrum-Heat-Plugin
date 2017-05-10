@@ -104,7 +104,7 @@ namespace Spectrum.Plugins.Heat
         private void ValidateSettings()
         {
             if (!_settings.ContainsKey("ToggleHeatHotkey"))
-                _settings.Add("ToggleHeatHotkey", "Space");
+                _settings.Add("ToggleHeatHotkey", "LeftControl+H");
             
             if (!_settings.ContainsKey("units"))
                 _settings.Add("units", "kph");
