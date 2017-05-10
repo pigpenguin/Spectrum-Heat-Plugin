@@ -10,9 +10,15 @@ Get the .dll file from the releases page and drop it into spectrums plugins fold
 
 Settings
 ---
+<dl>
+<dt>units</dt>
+<dd>the units to display the cars velocity. Acceptable values mph and kph</dd>
 
-+ units: the units to display the cars velocity. Acceptable values mph and kph
-+ display: where to render the information. Acceptable values hud, which will cause the information to render where stunt info is rendered, and watermark, which will cause the text to render where the version number is.
-+ activation: when to display the information. Acceptable values always, warning, and toggle. Always will always render the information, warning will only render when above a certain heat threshold, and toggle will use a hotkey to toggle the information on and off.
-+ warningThreshold: when to trigger the information if using warning mode. Acceptable values any number between 0 and 1.
-+ toggleHotkey: what hotkey to use when using toggle mode.
+<dt>display</dt> <dd>where to render the information. Acceptable values hud, which will cause the information to render where stunt info is rendered, and watermark, which will cause the text to render where the version number is.</dd>
+
+<dt>activation</dt> <dd>when to display the information. Acceptable values always, warning, and toggle. Always will always render the information, warning will only render when above a certain heat threshold, and toggle will use a hotkey to toggle the information on and off.</dd>
+
+<dt>warningThreshold</dt> <dd>when to trigger the information if using warning mode. Acceptable values any number between 0 and 1.</dd>
+
+<dt>toggleHotkey</dt> <dd>what hotkey to use when using toggle mode.</dd>
+</dl>
