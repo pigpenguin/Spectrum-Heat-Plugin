@@ -30,8 +30,8 @@ namespace Spectrum.Plugins.Heat
         {
             _settings = new Settings(typeof(Entry));
             ValidateSettings();
-            units = (Units)Enum.Parse(typeof(Units),_settings.GetItem<string>("units"));
-            display = (Display)Enum.Parse(typeof(Display),_settings.GetItem<string>("display"));
+            units      = (Units)Enum.Parse(typeof(Units),_settings.GetItem<string>("units"));
+            display    = (Display)Enum.Parse(typeof(Display),_settings.GetItem<string>("display"));
             activation = (Activation)Enum.Parse(typeof(Activation),_settings.GetItem<string>("activation"));
             warningThreshold = _settings.GetItem<double>("warningThreshold");
             manager.Hotkeys.Bind(_settings.GetItem<string>("toggleHotkey"), () => { toggled = !toggled; Game.WatermarkText = ""; });
@@ -81,13 +81,13 @@ namespace Spectrum.Plugins.Heat
             if (!_settings.ContainsKey("toggleHotkey"))
                 _settings.Add("toggleHotkey", "LeftControl+H");
             
-            if (!_settings.ContainsKey("units"))
+            if (!_settings.ContainsKey("units") || !Enum.IsDefined(typeof(Units),_settings["units"]))
                 _settings.Add("units", "kph");
 
-            if (!_settings.ContainsKey("display"))
+            if (!_settings.ContainsKey("display") || !Enum.IsDefined(typeof(Display),_settings["display"]))
                 _settings.Add("display", "watermark");
 
-            if (!_settings.ContainsKey("activation"))
+            if (!_settings.ContainsKey("activation") || !Enum.IsDefined(typeof(Activation),_settings["activation"]))
                 _settings.Add("activation", "always");
 
             if (!_settings.ContainsKey("warningThreshold"))
