@@ -42,7 +42,7 @@ namespace Spectrum.Plugins.Heat
             if (DisplayEnabled())
             {
                 if (display == Display.hud)
-                    LocalVehicle.HUD.SetHUDText(DisplayText());
+                    SetHUDText(DisplayText());
                 else
                     Game.WatermarkText = DisplayText();
             }
@@ -50,14 +50,14 @@ namespace Spectrum.Plugins.Heat
         }
         private string HeatPercent()
         {
-            return Convert.ToInt32(LocalVehicle.HeatLevel * 100).ToString() + "% Heat";
+            return Convert.ToInt32(GetHeatLevel() * 100).ToString() + "% Heat";
         }
         private string Speed()
         {
             if(units == Units.kph)
-                return Convert.ToInt32(LocalVehicle.VelocityKPH).ToString() + "KPH";
+                return Convert.ToInt32(GetVelocityKPH()).ToString() + "KPH";
 
-            return Convert.ToInt32(LocalVehicle.VelocityMPH).ToString() + "MPH";
+            return Convert.ToInt32(GetVelocityMPH()).ToString() + "MPH";
         }
         private string DisplayText() {
             return HeatPercent() + "\n" + Speed();
@@ -67,7 +67,7 @@ namespace Spectrum.Plugins.Heat
             try
             {
                 return (activation == Activation.always) ||
-                       (activation == Activation.warning && LocalVehicle.HeatLevel > warningThreshold) ||
+                       (activation == Activation.warning && GetHeatLevel() > warningThreshold) ||
                        (activation == Activation.toggle && toggled);
             }
             catch
@@ -99,6 +99,46 @@ namespace Spectrum.Plugins.Heat
         public void Shutdown()
         {
 
+        }
+
+        // Utilities, taken from Spectrum's LocalVehicle
+        private static CarLogic GetCarLogic()
+        {
+            var carLogic = G.Sys.PlayerManager_?.Current_?.playerData_?.Car_?.GetComponent<CarLogic>();
+            if (carLogic == null)
+                carLogic = G.Sys.PlayerManager_?.Current_?.playerData_?.CarLogic_;
+            return carLogic;
+        }
+        private static HoverScreenEmitter GetHoverScreenEmitter()
+        {
+            return G.Sys.PlayerManager_?.Current_?.playerData_?.Car_?.GetComponent<HoverScreenEmitter>();
+        }
+        private static float GetHeatLevel()
+        {
+            var carLogic = GetCarLogic();
+            if (carLogic)
+                return carLogic.Heat_;
+            return 0f;
+        }
+        private static float GetVelocityKPH()
+        {
+            var carLogic = GetCarLogic();
+            if (carLogic)
+                return carLogic.CarStats_.GetKilometersPerHour();
+            return 0f;
+        }
+        private static float GetVelocityMPH()
+        {
+            var carLogic = GetCarLogic();
+            if (carLogic)
+                return carLogic.CarStats_.GetMilesPerHour();
+            return 0f;
+        }
+        private static void SetHUDText(string text)
+        {
+            var hoverScreen = GetHoverScreenEmitter();
+            if (hoverScreen)
+                hoverScreen.SetTrickText(new TrickyTextLogic.TrickText(3.0f, -1, TrickyTextLogic.TrickText.TextType.standard, text));
         }
     }
 }
