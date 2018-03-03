@@ -1,9 +1,8 @@
 ﻿using Spectrum.API;
-using Spectrum.API.Game;
-using Spectrum.API.Game.Vehicle;
 using Spectrum.API.Interfaces.Plugins;
 using Spectrum.API.Interfaces.Systems;
 using Spectrum.API.Configuration;
+using Spectrum.Interop.Game;
 using System;
 
 namespace Spectrum.Plugins.Heat
@@ -17,7 +16,7 @@ namespace Spectrum.Plugins.Heat
         public string FriendlyName => "Heat";
         public string Author => "pigpenguin";
         public string Contact => "pigpenguin@gmail.com";
-        public APILevel CompatibleAPILevel => APILevel.UltraViolet;
+        public APILevel CompatibleAPILevel => APILevel.XRay;
 
         private bool toggled = false;
         private double warningThreshold;

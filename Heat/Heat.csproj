@@ -33,10 +33,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Spectrum\Spectrum.Dependencies\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Spectrum.API, Version=1.0.51.5909, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Spectrum\Spectrum.API\bin\Debug\Spectrum.API.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,6 +46,16 @@
   <ItemGroup>
     <Compile Include="Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spectrum\Spectrum.API\Spectrum.API.csproj">
+      <Project>{a9cfd86d-1604-4c80-b02b-e60ad98ba86f}</Project>
+      <Name>Spectrum.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Spectrum\Spectrum.Interop\Spectrum.Interop.csproj">
+      <Project>{77c20b4a-284c-4b3d-a5b5-b254e637fb47}</Project>
+      <Name>Spectrum.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
