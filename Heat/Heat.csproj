@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Heat</RootNamespace>
-    <AssemblyName>Heat.plugin</AssemblyName>
+    <AssemblyName>Heat</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,4 +58,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir $(TargetName)
+robocopy $(SolutionDir)\include $(TargetName) /MIR
+copy $(TargetPath) $(TargetName)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

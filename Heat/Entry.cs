@@ -1,5 +1,4 @@
-﻿using Spectrum.API;
-using Spectrum.API.Interfaces.Plugins;
+﻿using Spectrum.API.Interfaces.Plugins;
 using Spectrum.API.Interfaces.Systems;
 using Spectrum.API.Configuration;
 using Spectrum.Interop.Game;
@@ -7,17 +6,11 @@ using System;
 
 namespace Spectrum.Plugins.Heat
 {
-
-    public enum Units {kph, mph};
-    public enum Display {watermark, hud, car};
-    public enum Activation {always, warning, toggle};
+    public enum Units { kph, mph };
+    public enum Display { watermark, hud, car };
+    public enum Activation { always, warning, toggle };
     public class Entry : IPlugin, IUpdatable
     {
-        public string FriendlyName => "Heat";
-        public string Author => "pigpenguin";
-        public string Contact => "pigpenguin@gmail.com";
-        public APILevel CompatibleAPILevel => APILevel.XRay;
-
         private bool toggled = false;
         private double warningThreshold;
         private Units units;
@@ -25,13 +18,13 @@ namespace Spectrum.Plugins.Heat
         private Activation activation;
         private Settings _settings;
 
-        public void Initialize(IManager manager)
+        public void Initialize(IManager manager, string ipcIdentifier)
         {
-            _settings = new Settings(typeof(Entry));
+            _settings = new Settings("Heat.plugin");
             ValidateSettings();
-            units      = (Units)Enum.Parse(typeof(Units),_settings.GetItem<string>("units"));
-            display    = (Display)Enum.Parse(typeof(Display),_settings.GetItem<string>("display"));
-            activation = (Activation)Enum.Parse(typeof(Activation),_settings.GetItem<string>("activation"));
+            units = (Units)Enum.Parse(typeof(Units), _settings.GetItem<string>("units"));
+            display = (Display)Enum.Parse(typeof(Display), _settings.GetItem<string>("display"));
+            activation = (Activation)Enum.Parse(typeof(Activation), _settings.GetItem<string>("activation"));
             warningThreshold = _settings.GetItem<double>("warningThreshold");
             manager.Hotkeys.Bind(_settings.GetItem<string>("toggleHotkey"), () => { toggled = !toggled; Game.WatermarkText = ""; });
         }
@@ -53,12 +46,13 @@ namespace Spectrum.Plugins.Heat
         }
         private string Speed()
         {
-            if(units == Units.kph)
+            if (units == Units.kph)
                 return Convert.ToInt32(GetVelocityKPH()).ToString() + "KPH";
 
             return Convert.ToInt32(GetVelocityMPH()).ToString() + "MPH";
         }
-        private string DisplayText() {
+        private string DisplayText()
+        {
             return HeatPercent() + "\n" + Speed();
         }
         private bool DisplayEnabled()
@@ -74,19 +68,19 @@ namespace Spectrum.Plugins.Heat
                 return false;
             }
         }
-        
+
         private void ValidateSettings()
         {
             if (!_settings.ContainsKey("toggleHotkey"))
                 _settings.Add("toggleHotkey", "LeftControl+H");
-            
-            if (!_settings.ContainsKey("units") || !Enum.IsDefined(typeof(Units),_settings["units"]))
+
+            if (!_settings.ContainsKey("units") || !Enum.IsDefined(typeof(Units), _settings["units"]))
                 _settings.Add("units", "kph");
 
-            if (!_settings.ContainsKey("display") || !Enum.IsDefined(typeof(Display),_settings["display"]))
+            if (!_settings.ContainsKey("display") || !Enum.IsDefined(typeof(Display), _settings["display"]))
                 _settings.Add("display", "watermark");
 
-            if (!_settings.ContainsKey("activation") || !Enum.IsDefined(typeof(Activation),_settings["activation"]))
+            if (!_settings.ContainsKey("activation") || !Enum.IsDefined(typeof(Activation), _settings["activation"]))
                 _settings.Add("activation", "always");
 
             if (!_settings.ContainsKey("warningThreshold"))
