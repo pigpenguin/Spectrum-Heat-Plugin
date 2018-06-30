@@ -89,11 +89,6 @@ namespace Spectrum.Plugins.Heat
             _settings.Save();
         }
 
-        public void Shutdown()
-        {
-
-        }
-
         // Utilities, taken from Spectrum's LocalVehicle
         private static CarLogic GetCarLogic()
         {
