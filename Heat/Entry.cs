@@ -6,7 +6,7 @@ using System;
 
 namespace Spectrum.Plugins.Heat
 {
-    public enum Units { kph, mph };
+    public enum Units { automatic, kph, mph };
     public enum Display { watermark, hud, car };
     public enum Activation { always, warning, toggle };
     public class Entry : IPlugin, IUpdatable
@@ -48,8 +48,17 @@ namespace Spectrum.Plugins.Heat
         {
             if (units == Units.kph)
                 return Convert.ToInt32(GetVelocityKPH()).ToString() + "KPH";
-
-            return Convert.ToInt32(GetVelocityMPH()).ToString() + "MPH";
+            else if (units == Units.mph)
+                return Convert.ToInt32(GetVelocityMPH()).ToString() + "MPH";
+            else
+            { 
+                var manager = GetOptionsManager();
+                var default_units = manager.General_.Units_;
+                if (default_units == global::Units.Imperial)
+                    return Convert.ToInt32(GetVelocityMPH()).ToString() + "MPH";
+                else
+                    return Convert.ToInt32(GetVelocityKPH()).ToString() + "KPH";
+            }
         }
         private string DisplayText()
         {
@@ -75,7 +84,7 @@ namespace Spectrum.Plugins.Heat
                 _settings.Add("toggleHotkey", "LeftControl+H");
 
             if (!_settings.ContainsKey("units") || !Enum.IsDefined(typeof(Units), _settings["units"]))
-                _settings.Add("units", "kph");
+                _settings.Add("units", "automatic");
 
             if (!_settings.ContainsKey("display") || !Enum.IsDefined(typeof(Display), _settings["display"]))
                 _settings.Add("display", "watermark");
@@ -96,6 +105,12 @@ namespace Spectrum.Plugins.Heat
             if (carLogic == null)
                 carLogic = G.Sys.PlayerManager_?.Current_?.playerData_?.CarLogic_;
             return carLogic;
+        }
+        private static OptionsManager GetOptionsManager()
+        {
+            OptionsManager optionsManager_ = G.Sys.OptionsManager_;
+            //There is a chance this is null, not sure how to deal with that yet
+            return optionsManager_;
         }
         private static HoverScreenEmitter GetHoverScreenEmitter()
         {
