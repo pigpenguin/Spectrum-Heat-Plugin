@@ -12,7 +12,7 @@ Settings
 ---
 <dl>
 <dt>units</dt>
-<dd>the units to display the cars velocity. Acceptable values mph and kph</dd>
+<dd>the units to display the cars velocity. Acceptable values automatic, mph, and kph. Automatic is the default setting and will pick whichever speed matches your distance settings. This is probably the value you want to keep it on but you do you.</dd>
 
 <dt>display</dt> <dd>where to render the information. Acceptable values hud, which will cause the information to render where stunt info is rendered, and watermark, which will cause the text to render where the version number is.</dd>
 
