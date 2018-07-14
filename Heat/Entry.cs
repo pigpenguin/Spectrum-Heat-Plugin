@@ -3,6 +3,8 @@ using Spectrum.API.Interfaces.Systems;
 using Spectrum.API.Configuration;
 using Spectrum.Interop.Game;
 using System;
+using Helper;
+using System.Collections.Generic;
 
 namespace Spectrum.Plugins.Heat
 {
@@ -17,10 +19,12 @@ namespace Spectrum.Plugins.Heat
         private Display display;
         private Activation activation;
         private Settings _settings;
+        private SettingHelper settingsHelper;
 
         public void Initialize(IManager manager, string ipcIdentifier)
         {
             _settings = new Settings("Heat.plugin");
+            settingsHelper = new SettingHelper(ipcIdentifier, ref _settings, "Heat Settings", "Heat");
             ValidateSettings();
             units = (Units)Enum.Parse(typeof(Units), _settings.GetItem<string>("units"));
             display = (Display)Enum.Parse(typeof(Display), _settings.GetItem<string>("display"));
@@ -83,17 +87,42 @@ namespace Spectrum.Plugins.Heat
             if (!_settings.ContainsKey("toggleHotkey"))
                 _settings.Add("toggleHotkey", "LeftControl+H");
 
-            if (!_settings.ContainsKey("units") || !Enum.IsDefined(typeof(Units), _settings["units"]))
-                _settings.Add("units", "automatic");
+            settingsHelper.AddEnum<Units>( "UNITS"
+                                         , "What units to display velocity in"
+                                         , false
+                                         , Units.automatic
+                                         , new KeyValuePair<string, Units>[] 
+                                         { new KeyValuePair<string, Units>("Automatic", Units.automatic)
+                                         , new KeyValuePair<string, Units>("KPH", Units.kph)
+                                         , new KeyValuePair<string, Units>("MPH", Units.mph)
+                                         });
 
-            if (!_settings.ContainsKey("display") || !Enum.IsDefined(typeof(Display), _settings["display"]))
-                _settings.Add("display", "watermark");
+            settingsHelper.AddEnum<Display>("DISPLAY"
+                                           , "Where to display heat information"
+                                           , false
+                                           , Display.watermark
+                                           , new KeyValuePair<string, Display>[]
+                                           { new KeyValuePair<string, Display>("watermark",Display.watermark)
+                                           , new KeyValuePair<string, Display>("hud",Display.hud)
+                                           , new KeyValuePair<string, Display>("car",Display.car)
+                                           });
 
-            if (!_settings.ContainsKey("activation") || !Enum.IsDefined(typeof(Activation), _settings["activation"]))
-                _settings.Add("activation", "always");
+            settingsHelper.AddEnum<Activation>("ACTIVATION"
+                                              , "When to display heat information"
+                                              , false
+                                              , Activation.always
+                                              , new KeyValuePair<string, Activation>[]
+                                              { new KeyValuePair<string, Activation>("Always", Activation.always)
+                                              , new KeyValuePair<string, Activation>("Warning",Activation.warning)
+                                              , new KeyValuePair<string, Activation>("Hotkey", Activation.toggle)
+                                              });
 
-            if (!_settings.ContainsKey("warningThreshold"))
-                _settings.Add("warningThreshold", 0.80);
+            settingsHelper.AddFloat("WARNING THRESHOLD"
+                                   , "If activation is set to warning, this is when it triggers"
+                                   , false
+                                   , (float)0.8
+                                   , (float)0.0
+                                   , (float)1.0);
 
             _settings.Save();
         }
